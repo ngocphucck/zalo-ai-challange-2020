@@ -23,4 +23,3 @@ def get_data(data_folder):
             data.append((os.path.join(data_folder, person_name, voice_name), dictionary[person_name]))
 
     return data
-

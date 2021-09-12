@@ -4,6 +4,7 @@ import random
 import numpy
 from scipy.io import wavfile
 from extractors.MFCC.mfcc import mfcc
+from extractors.spectrogram.spectrogram import get_spec
 
 
 class VoicePairDataset(Dataset):
@@ -72,8 +73,44 @@ class VoicePairDataset(Dataset):
         return new_features
 
 
+class VoiceSingleDataset(Dataset):
+    def __init__(self, data_path):
+        with open(data_path, 'r') as f:
+            self.data = f.readlines(data_path)
+
+    def __getitem__(self, item):
+        label, audio_path = self.data[item][:-1].split(' ')
+        label = int(label)
+        spec = get_spec(audio_path)
+
+        return torch.tensor(spec), torch.tensor(label, dtype=torch.long)
+
+    def __len__(self):
+
+        return len(self.data)
+
+
+class VoiceContrastiveDataset(Dataset):
+    def __init__(self, data_path):
+        super(VoiceContrastiveDataset, self).__init__()
+        with open(data_path, 'r') as f:
+            self.data = f.readlines()
+
+    def __getitem__(self, item):
+        label, wav_path1, wav_path2 = self.data[item][:-1].split(' ')
+        audio1 = torch.unsqueeze(torch.tensor(get_spec(wav_path=wav_path1)), 0)
+        audio2 = torch.unsqueeze(torch.tensor(get_spec(wav_path=wav_path2)), 0)
+
+        return audio1, audio2, torch.tensor(int(label), dtype=torch.long)
+
+    def __len__(self):
+
+        return len(self.data)
+
+
 if __name__ == '__main__':
     data = [('../data/812.wav', 0), ('../data/808-27.wav', 1), ('../data/812.wav', 1)]
     dataset = VoicePairDataset(data, max_sequence_len=2048)
     print(dataset[0])
+
     pass

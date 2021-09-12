@@ -102,12 +102,12 @@ def pre_emphasis(signal, coefficient=0.95):
 
 
 if __name__ == '__main__':
-    wav_file = '../data/812.wav'
+    wav_file = '/home/doanphu/Documents/Code/VND_project/zalo-ai-challange-2020/voice_verification/data/808-27.wav'
     sampling_rate, signal = wavfile.read(wav_file)
 
     print(signal)
     frames = frame_signal(signal, frame_len=25, frame_step=15)
     print(frames)
-    plt.plot(frames)
+    plt.plot(frames[0])
     plt.show()
     pass

@@ -1,7 +1,7 @@
 from __future__ import division
 import numpy
 from scipy.fftpack import dct
-from src.extractors.MFCC import sigproc
+from voice_verification.src.extractors.MFCC import sigproc
 from scipy.io import wavfile
 
 
